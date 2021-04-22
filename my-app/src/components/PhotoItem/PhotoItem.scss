@@ -1,0 +1,30 @@
+@import "../../sass//variables.scss";
+
+.photoItem {
+  z-index: 0;
+  border: 1px solid red;
+  position: relative;
+
+  &__hover {
+    visibility: hidden;
+    position: absolute;
+  }
+
+  &:hover &__hover {
+    visibility: visible;
+    font-size: 400;
+    color: red;
+    border: 5px solid blue;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: rgba(191, 187, 187, 0.6);
+  }
+
+  &__img {
+    border: 0.2rem solid $color-grey-light;
+    border-radius: 0.6rem;
+    border: 1px solid green;
+  }
+}

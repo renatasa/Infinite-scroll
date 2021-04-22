@@ -1,0 +1,9 @@
+@import '../../sass/variables.scss';
+
+.photos{
+    background-color: $color-grey-light ;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}

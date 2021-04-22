@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PhotoItem from "../../components/PhotoItem/PhotoItem";
+import "./PhotoStream.scss";
 
 export class PhotoStream extends Component {
   state = {
@@ -33,6 +34,7 @@ export class PhotoStream extends Component {
             photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
             photoObj.server = xmlPhotoElements[i].getAttribute("server");
             photoObj.title = xmlPhotoElements[i].getAttribute("title");
+            photoObj.author= xmlPhotoElements[i].getAttribute("author");
             photoAttributesArr.push(photoObj);
           }
           this.setState({
@@ -62,7 +64,7 @@ export class PhotoStream extends Component {
     const {scrolling, pages, currentPage} = this.state
     if(scrolling) return
     if(pages<=currentPage) return
-    const lastPhoto=document.querySelector('div.photos > img:last-child')
+    const lastPhoto=document.querySelector('div.photos > div:last-child')
     const lastPhotoOffset=lastPhoto.offsetTop + lastPhoto.clientHeight
     const pageOffset=window.pageYOffset + window.innerHeight
     const bottomOffset=20
@@ -77,6 +79,7 @@ export class PhotoStream extends Component {
           secret={photo.secret}
           id={photo.id}
           title={photo.title}
+          author={photo.author}
           key={key}
         />
       ));
