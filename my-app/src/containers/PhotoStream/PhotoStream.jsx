@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 import PhotoItem from "../../components/PhotoItem/PhotoItem";
+import "./PhotoStream.scss";
 
 export class PhotoStream extends Component {
   state = {
     photoAttributesArray: [],
-    currentPage:0,
+    currentPage: 0,
     pages: 10,
     photosPerPage: 10,
-    scrolling: false
+    scrolling: false,
   };
 
   componentDidMount() {
     this.loadPhotos();
-    this.scrollListener = window.addEventListener('scroll', (e)=>{
-      this.handleScroll()
-    })
+    this.scrollListener = window.addEventListener("scroll", (e) => {
+      this.handleScroll();
+    });
   }
 
   loadPhotos = () => {
@@ -33,6 +34,7 @@ export class PhotoStream extends Component {
             photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
             photoObj.server = xmlPhotoElements[i].getAttribute("server");
             photoObj.title = xmlPhotoElements[i].getAttribute("title");
+            photoObj.author = xmlPhotoElements[i].getAttribute("author");
             photoAttributesArr.push(photoObj);
           }
           this.setState({
@@ -40,7 +42,7 @@ export class PhotoStream extends Component {
               ...this.state.photoAttributesArray,
               ...photoAttributesArr,
             ],
-            scrolling:false
+            scrolling: false,
           });
         }
       }
@@ -51,23 +53,26 @@ export class PhotoStream extends Component {
     req.send();
   };
 
-  loadMore=()=>{
-    this.setState(prevState=>({
-      page: prevState.currentPage + 1,
-      scrolling: true
-    }), this.loadPhotos)
-  }
+  loadMore = () => {
+    this.setState(
+      (prevState) => ({
+        page: prevState.currentPage + 1,
+        scrolling: true,
+      }),
+      this.loadPhotos
+    );
+  };
 
-  handleScroll=()=>{
-    const {scrolling, pages, currentPage} = this.state
-    if(scrolling) return
-    if(pages<=currentPage) return
-    const lastPhoto=document.querySelector('div.photos > img:last-child')
-    const lastPhotoOffset=lastPhoto.offsetTop + lastPhoto.clientHeight
-    const pageOffset=window.pageYOffset + window.innerHeight
-    const bottomOffset=20
-    if(pageOffset > lastPhotoOffset-bottomOffset) this.loadMore()   
-  }
+  handleScroll = () => {
+    const { scrolling, pages, currentPage } = this.state;
+    if (scrolling) return;
+    if (pages <= currentPage) return;
+    const lastPhoto = document.querySelector("div.photos > div:last-child");
+    const lastPhotoOffset = lastPhoto.offsetTop + lastPhoto.clientHeight;
+    const pageOffset = window.pageYOffset + window.innerHeight;
+    const bottomOffset = 20;
+    if (pageOffset > lastPhotoOffset - bottomOffset) this.loadMore();
+  };
 
   createPhotoStream = () => {
     if (this.state.photoAttributesArray.length > 0) {
@@ -77,6 +82,7 @@ export class PhotoStream extends Component {
           secret={photo.secret}
           id={photo.id}
           title={photo.title}
+          author={photo.author}
           key={key}
         />
       ));
@@ -84,9 +90,11 @@ export class PhotoStream extends Component {
   };
 
   render() {
-    return <div>
-      <div className="photos"> {this.createPhotoStream()} </div>
-    </div>;
+    return (
+      <div>
+        <div className="photos"> {this.createPhotoStream()} </div>
+      </div>
+    );
   }
 }
 
