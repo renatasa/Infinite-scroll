@@ -4,10 +4,29 @@
   z-index: 0;
   border: 1px solid red;
   position: relative;
+  margin: 1rem;
 
   &__hover {
     visibility: hidden;
     position: absolute;
+    transition: all 0.2s;
+
+    & > button {
+      background-color: transparent;
+      color: $color-grey-light;
+      border: 0.1rem solid $color-grey-light;
+      border-radius: 1.5rem;
+      height: 20%;
+      width: 30%;
+      font-size: $font-size-medium;
+      font-weight: $font-weight-medium;
+      transition: all 0.2s;
+    }
+
+    &__title {
+      color: pink;
+      margin-top: 30%;
+    }
   }
 
   &:hover &__hover {
@@ -19,12 +38,22 @@
     width: 100%;
     position: absolute;
     z-index: 1;
-    background-color: rgba(191, 187, 187, 0.6);
+    background-color: rgba(115, 114, 114, 0.6);
+    cursor: pointer;
+    margin-bottom: 1%;
   }
 
-  &__img {
+  &__imgDiv {
+    max-width: 12rem;
+    max-height: 10rem;
+    overflow: hidden;
     border: 0.2rem solid $color-grey-light;
     border-radius: 0.6rem;
     border: 1px solid green;
+
+    & > img {
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
   }
 }

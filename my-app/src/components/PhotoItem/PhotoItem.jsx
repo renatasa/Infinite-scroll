@@ -5,31 +5,41 @@ const photoItem = (props) => {
   const photoSrc = `https://live.staticflickr.com/${props.server}/${props.id}_${props.secret}_w.jpg`;
 
   const saveInLocalStorage = () => {
-    if (localStorage.getItem("favoritePhotos") !== null) {
-      let favoritePhotos = localStorage.getItem("favoritePhotos").split(",");
-      favoritePhotos.push(photoSrc);
-      localStorage.setItem("favoritePhotos", favoritePhotos);
+    if (localStorage.getItem("favouritePhotos") !== null) {
+      let favouritePhotos = localStorage.getItem("favouritePhotos").split(",");
+      favouritePhotos.push(photoSrc);
+      localStorage.setItem("favouritePhotos", favouritePhotos);
     } else {
-      let favoritePhotos = [];
-      favoritePhotos.push(photoSrc);
-      localStorage.setItem("favoritePhotos", favoritePhotos);
+      let favouritePhotos = [];
+      favouritePhotos.push(photoSrc);
+      localStorage.setItem("favouritePhotos", favouritePhotos);
     }
+  };
+
+  const calculateWidth = () => {
+    const img = new Image();
+    img.onload = function () {
+      return this.width;
+    };
   };
 
   return (
     <div className="photoItem">
       <div className="photoItem__hover">
-        {props.title}
-        {props.author}
-        <button onClick={() => saveInLocalStorage()}>Favorite</button>
+        <p className="photoItem__hover__title">
+          {props.title ? props.title : "No title"}
+        </p>
+        <p>{props.author ? props.author : "No author"}</p>
+        <button onClick={() => saveInLocalStorage()}>Favourite</button>
       </div>
-      <img
-        className="photoItem__img"
-        src={photoSrc}
-        alt={props.title}
-        width="300"
-        height="200"
-      ></img>
+      <div className="photoItem__imgDiv">
+        <img
+          src={photoSrc}
+          alt={props.title}
+          width={calculateWidth()}
+          heigh
+        ></img>
+      </div>
     </div>
   );
 };
