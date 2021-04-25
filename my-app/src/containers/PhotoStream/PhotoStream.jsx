@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import PhotoItem from "../../components/PhotoItem/PhotoItem";
-import ErrorMessage, {
-  errorMessage,
-} from "../../components/ErrorMessage/ErrorMessage";
+import Spinner from "../../components/Spinner/Spinner";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage.jsx";
 import "./PhotoStream.scss";
 
 export class PhotoStream extends Component {
   state = {
     photoAttributesArray: [],
     currentPage: 0,
-    pages: 10,
-    photosPerPage: 10,
+    pages: 1000,
+    photosPerPage: 50,
     scrolling: false,
     error: "",
+    loading: false,
   };
 
   componentDidMount() {
@@ -23,8 +23,8 @@ export class PhotoStream extends Component {
   }
 
   loadPhotos = () => {
+    this.setState({ loading: true });
     let url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${this.state.photosPerPage}&page=${this.state.currentPage}&format=rest`;
-
     let req = new XMLHttpRequest();
     req.onreadystatechange = () => {
       if (req.readyState == XMLHttpRequest.DONE) {
@@ -54,14 +54,14 @@ export class PhotoStream extends Component {
             });
           } else {
             let photoAttributesArr = [];
-            console.log(test);
+            let photoItemsArr = [];
             for (let i = 0; i < xmlPhotoElements.length; i++) {
               let photoObj = {};
               photoObj.id = xmlPhotoElements[i].getAttribute("id");
               photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
               photoObj.server = xmlPhotoElements[i].getAttribute("server");
               photoObj.title = xmlPhotoElements[i].getAttribute("title");
-              photoObj.author = xmlPhotoElements[i].getAttribute("author");
+              photoObj.author = xmlPhotoElements[i].getAttribute("owner");
               photoAttributesArr.push(photoObj);
             }
             this.setState({
@@ -69,7 +69,12 @@ export class PhotoStream extends Component {
                 ...this.state.photoAttributesArray,
                 ...photoAttributesArr,
               ],
+              photoItemsArray: [
+                ...this.state.photoItemsArray,
+                ...photoItemsArr,
+              ],
               scrolling: false,
+              loading: false,
             });
           }
         }
@@ -91,6 +96,7 @@ export class PhotoStream extends Component {
       (prevState) => ({
         page: prevState.currentPage + 1,
         scrolling: true,
+        loading: false,
       }),
       this.loadPhotos
     );
@@ -123,7 +129,7 @@ export class PhotoStream extends Component {
   };
 
   createErrorMessage = () => {
-    if (this.state.error.length > 0) {
+    if (this.state.error.length > 0 && !this.state.loading) {
       return (
         <ErrorMessage
           error={this.state.error}
@@ -132,10 +138,12 @@ export class PhotoStream extends Component {
       );
     } else return null;
   };
+
   render() {
     return (
       <div>
         {this.createErrorMessage()}
+        {this.state.loading ? <Spinner /> : null}
         <div className="photos"> {this.createPhotoStream()} </div>
       </div>
     );

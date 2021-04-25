@@ -1,12 +1,11 @@
-@import '../../sass/variables.scss';
+@import "../../sass/variables.scss";
 
-.photosNotFetched{
-    background-color: $color-error;
-    color: $color-grey-light;
-    font-weight: $font-weight-thick;
-    font-size: $font-size-large;
-    border: transparent;
-    border-radius: .4rem;
-    padding: .5rem;
-
+.photosNotFetched {
+  background-color: $color-error;
+  color: $color-grey-light;
+  font-weight: $font-weight-error;
+  font-size: $font-size-error;
+  border: transparent;
+  border-radius: 0.4rem;
+  padding: 0.5rem;
 }

@@ -1,10 +1,10 @@
-import './App.css';
-import PhotoStream from './containers/PhotoStream/PhotoStream';
+import "./App.css";
+import PhotoStream from "./containers/PhotoStream/PhotoStream";
 
 function App() {
   return (
     <div className="App">
-<PhotoStream/>
+      <PhotoStream />
     </div>
   );
 }
