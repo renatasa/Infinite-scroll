@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import PhotoItem from "../../components/PhotoItem/PhotoItem";
+import Spinner from "../../components/Spinner/Spinner";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage.jsx";
 import "./PhotoStream.scss";
 
 export class PhotoStream extends Component {
   state = {
     photoAttributesArray: [],
     currentPage: 0,
-    pages: 10,
-    photosPerPage: 10,
+    pages: 1000,
+    photosPerPage: 50,
     scrolling: false,
+    error: "",
+    loading: false,
   };
 
   componentDidMount() {
@@ -19,6 +23,8 @@ export class PhotoStream extends Component {
   }
 
   loadPhotos = () => {
+    this.setState({ loading: true });
+    let url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${this.state.photosPerPage}&page=${this.state.currentPage}&format=rest`;
     let req = new XMLHttpRequest();
     req.onreadystatechange = () => {
       if (req.readyState == XMLHttpRequest.DONE) {
@@ -26,30 +32,58 @@ export class PhotoStream extends Component {
           let parser = new DOMParser();
           let xml = parser.parseFromString(req.response, "application/xml");
           let xmlPhotoElements = xml.getElementsByTagName("photo");
+          if (xml.getElementsByTagName("err").length !== 0) {
+            let xmlRequestErrorMessage = xml
+              .getElementsByTagName("err")[0]
+              .getAttribute("msg");
 
-          let photoAttributesArr = [];
-          for (let i = 0; i < xmlPhotoElements.length; i++) {
-            let photoObj = {};
-            photoObj.id = xmlPhotoElements[i].getAttribute("id");
-            photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
-            photoObj.server = xmlPhotoElements[i].getAttribute("server");
-            photoObj.title = xmlPhotoElements[i].getAttribute("title");
-            photoObj.author = xmlPhotoElements[i].getAttribute("author");
-            photoAttributesArr.push(photoObj);
+            let xmlRequestStatus = xml
+              .getElementsByTagName("rsp")[0]
+              .getAttribute("stat");
+            let xmlRequestErrorCode = xml
+              .getElementsByTagName("err")[0]
+              .getAttribute("code");
+            this.setState({
+              error:
+                "Request status: " +
+                xmlRequestStatus +
+                " Error code: " +
+                xmlRequestErrorCode +
+                " Error message: " +
+                xmlRequestErrorMessage,
+            });
+          } else {
+            let photoAttributesArr = [];
+            let photoItemsArr = [];
+            for (let i = 0; i < xmlPhotoElements.length; i++) {
+              let photoObj = {};
+              photoObj.id = xmlPhotoElements[i].getAttribute("id");
+              photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
+              photoObj.server = xmlPhotoElements[i].getAttribute("server");
+              photoObj.title = xmlPhotoElements[i].getAttribute("title");
+              photoObj.author = xmlPhotoElements[i].getAttribute("owner");
+              photoAttributesArr.push(photoObj);
+            }
+            this.setState({
+              photoAttributesArray: [
+                ...this.state.photoAttributesArray,
+                ...photoAttributesArr,
+              ],
+              scrolling: false,
+              loading: false,
+            });
           }
-          this.setState({
-            photoAttributesArray: [
-              ...this.state.photoAttributesArray,
-              ...photoAttributesArr,
-            ],
-            scrolling: false,
-          });
         }
       }
     };
 
-    let url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${this.state.photosPerPage}&page=${this.state.currentPage}&format=rest`;
     req.open("GET", url, true);
+    req.onerror = () => {
+      this.setState({
+        error:
+          "Error : request not sent. Please check request url and your internet connection.",
+      });
+    };
     req.send();
   };
 
@@ -58,6 +92,7 @@ export class PhotoStream extends Component {
       (prevState) => ({
         page: prevState.currentPage + 1,
         scrolling: true,
+        loading: false,
       }),
       this.loadPhotos
     );
@@ -89,9 +124,22 @@ export class PhotoStream extends Component {
     } else return [];
   };
 
+  createErrorMessage = () => {
+    if (this.state.error.length > 0 && !this.state.loading) {
+      return (
+        <ErrorMessage
+          error={this.state.error}
+          errorType={"errorFetchingPhotos"}
+        />
+      );
+    } else return null;
+  };
+
   render() {
     return (
       <div>
+        {this.createErrorMessage()}
+        {this.state.loading ? <Spinner /> : null}
         <div className="photos"> {this.createPhotoStream()} </div>
       </div>
     );
