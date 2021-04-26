@@ -69,10 +69,6 @@ export class PhotoStream extends Component {
                 ...this.state.photoAttributesArray,
                 ...photoAttributesArr,
               ],
-              photoItemsArray: [
-                ...this.state.photoItemsArray,
-                ...photoItemsArr,
-              ],
               scrolling: false,
               loading: false,
             });
