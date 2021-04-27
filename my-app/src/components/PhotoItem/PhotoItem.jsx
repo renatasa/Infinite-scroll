@@ -8,7 +8,7 @@ const photoItem = (props) => {
     if (localStorage.getItem("favouritePhotos") !== null) {
       let favouritePhotos = localStorage.getItem("favouritePhotos").split(",");
       for (let i = 0; i < favouritePhotos.length; i++) {
-        if (photoSrc == favouritePhotos[i]) {
+        if (photoSrc === favouritePhotos[i]) {
           return;
         }
       }
@@ -19,13 +19,6 @@ const photoItem = (props) => {
       favouritePhotos.push(photoSrc);
       localStorage.setItem("favouritePhotos", favouritePhotos);
     }
-  };
-
-  const calculateWidth = () => {
-    const img = new Image();
-    img.onload = () => {
-      return this.width;
-    };
   };
 
   const preferableTitleLength = 12;
@@ -50,8 +43,6 @@ const photoItem = (props) => {
         <img
           src={photoSrc}
           alt={props.title}
-          width={calculateWidth()}
-          heigh
         ></img>
       </div>
     </div>

@@ -1,15 +1,16 @@
-import React, { Component, lazy, Suspence } from "react";
-import PhotoItem from "../../components/PhotoItem/PhotoItem";
+import React, { Component, Suspense } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage.jsx";
+
 import "./PhotoStream.scss";
+const PhotoItem = React.lazy(() => import('../../components/PhotoItem/PhotoItem.jsx'));
 
 export class PhotoStream extends Component {
   state = {
     photoAttributesArray: [],
     currentPage: 0,
     pages: 1000,
-    photosPerPage: 5,
+    photosPerPage: 50,
     scrolling: false,
     error: "",
     loading: false,
@@ -27,11 +28,12 @@ export class PhotoStream extends Component {
     let url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${this.state.photosPerPage}&page=${this.state.currentPage}&format=rest`;
     let req = new XMLHttpRequest();
     req.onreadystatechange = () => {
-      if (req.readyState == XMLHttpRequest.DONE) {
-        if (req.status == 200) {
+      if (req.readyState === XMLHttpRequest.DONE) {
+        if (req.status === 200) {
           let parser = new DOMParser();
           let xml = parser.parseFromString(req.response, "application/xml");
           let xmlPhotoElements = xml.getElementsByTagName("photo");
+
           if (xml.getElementsByTagName("err").length !== 0) {
             let xmlRequestErrorMessage = xml
               .getElementsByTagName("err")[0]
@@ -56,9 +58,6 @@ export class PhotoStream extends Component {
             let photoAttributesArr = [];
             for (let i = 0; i < xmlPhotoElements.length; i++) {
               let photoObj = {};
-              photoObj.id = xmlPhotoElements[i].getAttribute("id");
-              photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
-              photoObj.server = xmlPhotoElements[i].getAttribute("server");
               photoObj.title = xmlPhotoElements[i].getAttribute("title");
               photoObj.author = xmlPhotoElements[i].getAttribute("owner");
               photoObj.url = `https://live.staticflickr.com/${xmlPhotoElements[i].getAttribute("server")}/${xmlPhotoElements[i].getAttribute("id")}_${xmlPhotoElements[i].getAttribute("secret")}_w.jpg`;
@@ -112,12 +111,14 @@ export class PhotoStream extends Component {
   createPhotoStream = () => {
     if (this.state.photoAttributesArray.length > 0) {
       return this.state.photoAttributesArray.map((photo, key) => (
+        <Suspense fallback={<Spinner />}>
         <PhotoItem
           url={photo.url}
           title={photo.title}
           author={photo.author}
           key={key}
         />
+        </Suspense>
       ));
     } else return [];
   };
@@ -138,6 +139,7 @@ export class PhotoStream extends Component {
       <div>
         {this.createErrorMessage()}
         {this.state.loading ? <Spinner /> : null}
+
         <div
           className={
             this.state.photoAttributesArray.length > 0 ? "photos" : undefined
@@ -146,6 +148,7 @@ export class PhotoStream extends Component {
           {" "}
           {this.createPhotoStream()}{" "}
         </div>
+
       </div>
     );
   }
