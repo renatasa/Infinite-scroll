@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, lazy, Suspence } from "react";
 import PhotoItem from "../../components/PhotoItem/PhotoItem";
 import Spinner from "../../components/Spinner/Spinner";
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage.jsx";
@@ -137,11 +137,13 @@ export class PhotoStream extends Component {
 
   render() {
     return (
+
       <div>
         {this.createErrorMessage()}
         {this.state.loading ? <Spinner /> : null}
-        <div className="photos"> {this.createPhotoStream()} </div>
+        <div className= {this.state.photoAttributesArray.length>0 ? "photos" : undefined} > {this.createPhotoStream()} </div>
       </div>
+
     );
   }
 }
