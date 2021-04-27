@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./PhotoItem.scss";
 
 const photoItem = (props) => {
-  const photoSrc = `https://live.staticflickr.com/${props.server}/${props.id}_${props.secret}_w.jpg`;
+  const photoSrc = props.url;
   const saveInLocalStorage = () => {
     if (localStorage.getItem("favouritePhotos") !== null) {
       let favouritePhotos = localStorage.getItem("favouritePhotos").split(",");
@@ -59,9 +59,7 @@ const photoItem = (props) => {
 };
 
 photoItem.propTypes = {
-  server: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  secret: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
 };

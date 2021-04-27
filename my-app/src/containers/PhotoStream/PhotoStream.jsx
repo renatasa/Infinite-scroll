@@ -9,7 +9,7 @@ export class PhotoStream extends Component {
     photoAttributesArray: [],
     currentPage: 0,
     pages: 1000,
-    photosPerPage: 50,
+    photosPerPage: 5,
     scrolling: false,
     error: "",
     loading: false,
@@ -54,7 +54,6 @@ export class PhotoStream extends Component {
             });
           } else {
             let photoAttributesArr = [];
-            let photoItemsArr = [];
             for (let i = 0; i < xmlPhotoElements.length; i++) {
               let photoObj = {};
               photoObj.id = xmlPhotoElements[i].getAttribute("id");
@@ -62,6 +61,7 @@ export class PhotoStream extends Component {
               photoObj.server = xmlPhotoElements[i].getAttribute("server");
               photoObj.title = xmlPhotoElements[i].getAttribute("title");
               photoObj.author = xmlPhotoElements[i].getAttribute("owner");
+              photoObj.url = `https://live.staticflickr.com/${xmlPhotoElements[i].getAttribute("server")}/${xmlPhotoElements[i].getAttribute("id")}_${xmlPhotoElements[i].getAttribute("secret")}_w.jpg`;
               photoAttributesArr.push(photoObj);
             }
             this.setState({
@@ -113,9 +113,7 @@ export class PhotoStream extends Component {
     if (this.state.photoAttributesArray.length > 0) {
       return this.state.photoAttributesArray.map((photo, key) => (
         <PhotoItem
-          server={photo.server}
-          secret={photo.secret}
-          id={photo.id}
+          url={photo.url}
           title={photo.title}
           author={photo.author}
           key={key}
@@ -137,13 +135,18 @@ export class PhotoStream extends Component {
 
   render() {
     return (
-
       <div>
         {this.createErrorMessage()}
         {this.state.loading ? <Spinner /> : null}
-        <div className= {this.state.photoAttributesArray.length>0 ? "photos" : undefined} > {this.createPhotoStream()} </div>
+        <div
+          className={
+            this.state.photoAttributesArray.length > 0 ? "photos" : undefined
+          }
+        >
+          {" "}
+          {this.createPhotoStream()}{" "}
+        </div>
       </div>
-
     );
   }
 }

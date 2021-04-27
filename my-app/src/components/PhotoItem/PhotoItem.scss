@@ -2,7 +2,6 @@
 
 .photoItem {
   z-index: 0;
-  border: 1px solid red;
   position: relative;
   margin: 0.3rem;
   margin-bottom: 1rem;
@@ -59,13 +58,13 @@
   &:hover &__hover {
     visibility: visible;
     font-size: 400;
-    color: red;
-    border: 5px solid blue;
     height: 100%;
     width: 100%;
     position: absolute;
     z-index: 1;
     background-color: rgba(115, 114, 114, 0.6);
+    border: transparent;
+    border-radius: 0.6rem;
     cursor: pointer;
     margin-bottom: 1%;
   }
@@ -74,9 +73,8 @@
     max-width: 15rem;
     max-height: 12rem;
     overflow: hidden;
-    border: 0.2rem solid $color-grey-light;
-    border-radius: 0.6rem;
-    border: 1px solid green;
+    border: transparent;
+    border-radius: 0.8rem;
 
     & > img {
       margin-left: 50%;
