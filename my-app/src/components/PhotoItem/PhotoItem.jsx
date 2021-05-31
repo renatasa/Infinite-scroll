@@ -28,7 +28,7 @@ const photoItem = (props) => {
       : props.title;
 
   return (
-    <div className="photoItem">
+    <div className="photoItem" data-test="component-PhotoItem">
       <div className="photoItem__hover">
         <p className="photoItem__hover__title">
           {props.title ? title : "No title"}
@@ -40,10 +40,7 @@ const photoItem = (props) => {
         <button onClick={() => saveInLocalStorage()}>Favourite</button>
       </div>
       <div className="photoItem__imgDiv">
-        <img
-          src={photoSrc}
-          alt={props.title}
-        ></img>
+        <img src={photoSrc} alt={props.title}></img>
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import "./App.css";
 import PhotoStream from "./containers/PhotoStream/PhotoStream";
 
 function App() {
