@@ -1,8 +1,9 @@
 @import "../../sass//variables.scss";
 
+@import "../../sass//variables.scss";
+
 .photoItem {
   z-index: 0;
-  border: 1px solid red;
   position: relative;
   margin: 0.3rem;
   margin-bottom: 1rem;
@@ -19,6 +20,7 @@
       border-radius: 1.5rem;
       height: 20%;
       width: 50%;
+      margin-left: 25%;
       font-size: $font-size-medium;
       font-weight: $font-weight-medium;
       transition: all 0.2s;
@@ -35,6 +37,7 @@
 
     &__title {
       color: $color-grey-light;
+      text-align: center;
       margin-top: 25%;
       font-weight: $font-weight-title;
       font-size: $font-size-title;
@@ -49,6 +52,7 @@
     }
 
     &__author {
+      text-align: center;
       color: $color-grey-light;
       font-size: $font-size-author;
       font-style: italic;
@@ -59,24 +63,23 @@
   &:hover &__hover {
     visibility: visible;
     font-size: 400;
-    color: red;
-    border: 5px solid blue;
     height: 100%;
     width: 100%;
     position: absolute;
     z-index: 1;
     background-color: rgba(115, 114, 114, 0.6);
+    border: transparent;
+    border-radius: 0.6rem;
     cursor: pointer;
     margin-bottom: 1%;
   }
 
   &__imgDiv {
-    max-width: 15rem;
-    max-height: 12rem;
+    width: 15rem;
+    height: 12rem;
     overflow: hidden;
-    border: 0.2rem solid $color-grey-light;
-    border-radius: 0.6rem;
-    border: 1px solid green;
+    border: transparent;
+    border-radius: 0.8rem;
 
     & > img {
       margin-left: 50%;
@@ -85,9 +88,57 @@
   }
 }
 
+@media (max-width: 780px) {
+  .photoItem {
+    margin-top: 0.2rem;
+    &__imgDiv {
+      max-width: 13rem;
+      max-height: 10.4rem;
+    }
+  }
+}
+
 @media (max-width: 420px) {
-  .photoItem__imgDiv {
-    max-width: 7rem;
-    max-height: 5.6rem;
+  .photoItem {
+    &__imgDiv {
+      max-width: 7rem;
+      max-height: 5.6rem;
+    }
+
+    &__hover {
+      &__title {
+        margin-top: 10%;
+        font-size: $font-size-title-small;
+      }
+      &__author {
+        font-size: $font-size-author-small;
+      }
+
+      & > button {
+        height: 30%;
+        width: 80%;
+        margin-left: 10%;
+      }
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .photoItem {
+    margin-top: 0.1rem;
+    &__imgDiv {
+      max-width: 9rem;
+      max-height: 7.2rem;
+    }
+  }
+}
+
+@media (max-width: 380px) {
+  .photoItem {
+    margin-top: 0.1rem;
+    &__imgDiv {
+      max-width: 7rem;
+      max-height: 5.6rem;
+    }
   }
 }

@@ -1,100 +1,83 @@
 import React, { Component } from "react";
-import PhotoItem from "../../components/PhotoItem/PhotoItem";
 import Spinner from "../../components/Spinner/Spinner";
-import ErrorMessage from "../../components/ErrorMessage/ErrorMessage.jsx";
+import { createErrorMessage } from "../../services/errorService";
+import { createPhotoStream } from "../../services/photoService";
+import { getPhotosByPage } from "../../api/flickrApi";
 import "./PhotoStream.scss";
+
+const constants = {
+  totalNumberOfPages: 1000,
+  firstPage: 0,
+  photosPerPage: 50,
+};
 
 export class PhotoStream extends Component {
   state = {
     photoAttributesArray: [],
-    currentPage: 0,
-    pages: 1000,
-    photosPerPage: 50,
+    currentPage: constants.currentPage,
+    pages: constants.totalNumberOfPages,
+    photosPerPage: constants.photosPerPage,
     scrolling: false,
     error: "",
     loading: false,
   };
 
   componentDidMount() {
-    this.loadPhotos();
+    getPhotosByPage(
+      this.startLoading,
+      this.updateStateWithPhotoData,
+      this.updateStateWithError,
+      this.state.photosPerPage,
+      this.state.currentPage,
+      this.increametCurrentPageOnFirstLoad
+    );
     this.scrollListener = window.addEventListener("scroll", (e) => {
       this.handleScroll();
     });
   }
 
-  loadPhotos = () => {
+  increametCurrentPageOnFirstLoad = () => {
+    this.setState((prevState) => ({
+      currentPage: prevState.currentPage + 1,
+    }));
+  };
+
+  updateStateWithError = (error) => {
+    this.setState({
+      loading: false,
+      error: error,
+    });
+  };
+
+  updateStateWithPhotoData = (photoAttributesArr) => {
+    this.setState({
+      photoAttributesArray: [
+        ...this.state.photoAttributesArray,
+        ...photoAttributesArr,
+      ],
+      scrolling: false,
+      loading: false,
+    });
+  };
+
+  startLoading = () => {
     this.setState({ loading: true });
-    let url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${this.state.photosPerPage}&page=${this.state.currentPage}&format=rest`;
-    let req = new XMLHttpRequest();
-    req.onreadystatechange = () => {
-      if (req.readyState == XMLHttpRequest.DONE) {
-        if (req.status == 200) {
-          let parser = new DOMParser();
-          let xml = parser.parseFromString(req.response, "application/xml");
-          let xmlPhotoElements = xml.getElementsByTagName("photo");
-          if (xml.getElementsByTagName("err").length !== 0) {
-            let xmlRequestErrorMessage = xml
-              .getElementsByTagName("err")[0]
-              .getAttribute("msg");
-
-            let xmlRequestStatus = xml
-              .getElementsByTagName("rsp")[0]
-              .getAttribute("stat");
-            let xmlRequestErrorCode = xml
-              .getElementsByTagName("err")[0]
-              .getAttribute("code");
-            this.setState({
-              error:
-                "Request status: " +
-                xmlRequestStatus +
-                " Error code: " +
-                xmlRequestErrorCode +
-                " Error message: " +
-                xmlRequestErrorMessage,
-            });
-          } else {
-            let photoAttributesArr = [];
-            let photoItemsArr = [];
-            for (let i = 0; i < xmlPhotoElements.length; i++) {
-              let photoObj = {};
-              photoObj.id = xmlPhotoElements[i].getAttribute("id");
-              photoObj.secret = xmlPhotoElements[i].getAttribute("secret");
-              photoObj.server = xmlPhotoElements[i].getAttribute("server");
-              photoObj.title = xmlPhotoElements[i].getAttribute("title");
-              photoObj.author = xmlPhotoElements[i].getAttribute("owner");
-              photoAttributesArr.push(photoObj);
-            }
-            this.setState({
-              photoAttributesArray: [
-                ...this.state.photoAttributesArray,
-                ...photoAttributesArr,
-              ],
-              scrolling: false,
-              loading: false,
-            });
-          }
-        }
-      }
-    };
-
-    req.open("GET", url, true);
-    req.onerror = () => {
-      this.setState({
-        error:
-          "Error : request not sent. Please check request url and your internet connection.",
-      });
-    };
-    req.send();
   };
 
   loadMore = () => {
     this.setState(
       (prevState) => ({
-        page: prevState.currentPage + 1,
+        currentPage: prevState.currentPage + 1,
         scrolling: true,
         loading: false,
       }),
-      this.loadPhotos
+      getPhotosByPage(
+        this.startLoading,
+        this.updateStateWithPhotoData,
+        this.updateStateWithError,
+        this.state.photosPerPage,
+        this.state.currentPage
+      )
     );
   };
 
@@ -109,38 +92,19 @@ export class PhotoStream extends Component {
     if (pageOffset > lastPhotoOffset - bottomOffset) this.loadMore();
   };
 
-  createPhotoStream = () => {
-    if (this.state.photoAttributesArray.length > 0) {
-      return this.state.photoAttributesArray.map((photo, key) => (
-        <PhotoItem
-          server={photo.server}
-          secret={photo.secret}
-          id={photo.id}
-          title={photo.title}
-          author={photo.author}
-          key={key}
-        />
-      ));
-    } else return [];
-  };
-
-  createErrorMessage = () => {
-    if (this.state.error.length > 0 && !this.state.loading) {
-      return (
-        <ErrorMessage
-          error={this.state.error}
-          errorType={"errorFetchingPhotos"}
-        />
-      );
-    } else return null;
-  };
-
   render() {
     return (
-      <div>
-        {this.createErrorMessage()}
-        {this.state.loading ? <Spinner /> : null}
-        <div className="photos"> {this.createPhotoStream()} </div>
+      <div data-test="component-PhotoStream">
+        {createErrorMessage(this.state.error, this.state.loading)}
+        {this.state.loading && !this.state.error ? <Spinner /> : null}
+
+        <div
+          className={
+            this.state.photoAttributesArray.length > 0 ? "photos" : undefined
+          }
+        >
+          {createPhotoStream(this.state.photoAttributesArray)}
+        </div>
       </div>
     );
   }
