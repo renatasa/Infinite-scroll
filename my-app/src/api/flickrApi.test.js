@@ -12,22 +12,6 @@ const inputParams = {
   increametCurrentPageOnFirstLoad: jest.fn(),
 };
 
-const mockRequest = (responseString) => {
-  return {
-    mockFetch: fetch.mockReturnValue(
-      Promise.resolve(new Response(responseString))
-    ),
-    mockLoadPhotos: loadPhotos(
-      inputParams.startLoading,
-      inputParams.updateStateWithPhotoData,
-      inputParams.updateStateWithError,
-      inputParams.photosPerPage,
-      inputParams.currentPage,
-      inputParams.increametCurrentPageOnFirstLoad
-    ),
-  };
-};
-
 const mockFetch = (responseString) => {
   return fetch.mockReturnValue(Promise.resolve(new Response(responseString)));
 };

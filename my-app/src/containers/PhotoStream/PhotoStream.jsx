@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import React, { Component } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import { createErrorMessage } from "../../services/errorService";
