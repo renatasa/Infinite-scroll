@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./PhotoItem.scss";
 
-const photoItem = (props) => {
+export const photoItem = (props) => {
+  console.log('photoItem')
   const photoSrc = props.url;
   const saveInLocalStorage = () => {
     if (localStorage.getItem("favouritePhotos") !== null) {

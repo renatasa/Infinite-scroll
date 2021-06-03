@@ -2,7 +2,7 @@ jest.mock("node-fetch");
 import fetch from "node-fetch";
 const { Response } = jest.requireActual("node-fetch");
 import { findByTestAttr } from "../../testUtils/testUtils";
-import { PhotoStream } from "./PhotoStream";
+import  PhotoStream  from "./PhotoStream";
 import Enzyme, { shallow } from "enzyme";
 import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
