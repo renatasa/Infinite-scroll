@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
 import React, { Component } from "react";
 import Spinner from "../../components/Spinner/Spinner";
-import { createErrorMessage } from "../../services/errorService";
-import { createPhotoStream } from "../../services/photoService";
+import { createErrorMessage } from "../services/errorService";
+import { createPhotoStream } from "../services/photoService";
 import { loadPhotos } from "../../api/flickrApi";
 import "./PhotoStream.scss";
 

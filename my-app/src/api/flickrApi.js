@@ -1,8 +1,8 @@
 import fetch from "node-fetch";
-import { createPhotoAttributesArray } from "../services/photoService";
+import { createPhotoAttributesArray } from "../containers/services/photoService";
 
 export const getPhotosByPage = (startLoading, photosPerPage, currentPage) => {
-  const url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key${process.env.REACT_APP_KEY}&per_page=${photosPerPage}&page=${currentPage}&format=json`;
+  const url = `https://www.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${process.env.REACT_APP_KEY}&per_page=${photosPerPage}&page=${currentPage}&format=json`;
   startLoading();
   return fetch(url).then((response) => {
     // throws error if server status response is not 200 (response.ok===false)

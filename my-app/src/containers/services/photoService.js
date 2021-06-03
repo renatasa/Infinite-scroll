@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import Spinner from "../components/Spinner/Spinner";
-const PhotoItem = React.lazy(() => import("../components/PhotoItem/PhotoItem"));
+import Spinner from "../../components/Spinner/Spinner";
+const PhotoItem = React.lazy(() => import("../../components/PhotoItem/PhotoItem"));
 
 export const createPhotoStream = (photoAttributesArray) => {
   if (photoAttributesArray.length > 0) {
