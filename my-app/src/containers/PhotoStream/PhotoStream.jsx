@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import { createErrorMessage } from "../../services/errorService";
 import { createPhotoStream } from "../../services/photoService";
-import { getPhotosByPage } from "../../api/flickrApi";
+import { loadPhotos } from "../../api/flickrApi";
 import "./PhotoStream.scss";
 
 const constants = {
   totalNumberOfPages: 1000,
   firstPage: 0,
-  photosPerPage: 50,
+  photosPerPage: 5,
 };
 
 export class PhotoStream extends Component {
@@ -23,7 +23,7 @@ export class PhotoStream extends Component {
   };
 
   componentDidMount() {
-    getPhotosByPage(
+    loadPhotos(
       this.startLoading,
       this.updateStateWithPhotoData,
       this.updateStateWithError,
@@ -35,6 +35,7 @@ export class PhotoStream extends Component {
       this.handleScroll();
     });
   }
+    
 
   increametCurrentPageOnFirstLoad = () => {
     this.setState((prevState) => ({
@@ -71,7 +72,7 @@ export class PhotoStream extends Component {
         scrolling: true,
         loading: false,
       }),
-      getPhotosByPage(
+      loadPhotos(
         this.startLoading,
         this.updateStateWithPhotoData,
         this.updateStateWithError,

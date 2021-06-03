@@ -19,13 +19,13 @@ export const createPhotoStream = (photoAttributesArray) => {
 
 export const createPhotoAttributesArray = (photoData) => {
   let photoAttributesArr = [];
-  photoAttributesArr= photoData.map((item)=>{
+  photoAttributesArr = photoData.map((item) => {
     const photoObj = {};
     photoObj.title = item.title;
     photoObj.author = item.owner;
     photoObj.url = `https://live.staticflickr.com/${item.server}/${item.id}_${item.secret}_w.jpg`;
     return photoObj;
-  })
+  });
 
   return photoAttributesArr;
 };
