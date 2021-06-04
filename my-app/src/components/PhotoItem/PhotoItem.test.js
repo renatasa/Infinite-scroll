@@ -5,11 +5,11 @@ import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test("When app PhotoItem receives correct props, then it renders without error", () => {
+test("When PhotoItem receives correct props, then it renders without error", () => {
   // arrange
   const defaultProps = {
     author: "someOwner2",
-    titl: "someTitle2",
+    title: "someTitle2",
     url: "https://live.staticflickr.com/someServer2/someId2_someSecret2_w.jpg",
   };
 
