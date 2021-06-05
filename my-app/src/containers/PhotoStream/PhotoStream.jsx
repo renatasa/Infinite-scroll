@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import React, { Component } from "react";
 import Spinner from "../../components/Spinner/Spinner";
-import { createErrorMessage } from "../services/errorService";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import { createPhotoStream } from "../services/photoService";
 import { loadPhotos } from "../../api/flickrApi";
 import "./PhotoStream.scss";
@@ -36,7 +36,6 @@ export class PhotoStream extends Component {
       this.handleScroll();
     });
   }
-    
 
   increametCurrentPageOnFirstLoad = () => {
     this.setState((prevState) => ({
@@ -97,8 +96,16 @@ export class PhotoStream extends Component {
   render() {
     return (
       <div data-test="component-PhotoStream">
-        {createErrorMessage(this.state.error, this.state.loading)}
-        {this.state.loading && !this.state.error ? <Spinner /> : null}
+        {this.state.error.length > 0 && !this.state.loading ? (
+          <ErrorMessage
+            error={this.state.error}
+            errorType={"errorFetchingPhotos"}
+            data-test="component-PhotoStreamError"
+          />
+        ) : null}
+        {this.state.loading && !this.state.error ? (
+          <Spinner data-test="component-Spinner" />
+        ) : null}
 
         <div
           className={
