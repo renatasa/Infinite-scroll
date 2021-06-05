@@ -1,9 +1,7 @@
 import Enzyme, { shallow } from "enzyme";
 import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
-import { findByTestAttr } from "../testUtils/testUtils";
-
+import { findByTestAttr } from "../../testUtils/testUtils";
 import { createErrorMessage } from "./errorService";
-
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("Test createErrorMessage function", () => {
@@ -21,10 +19,10 @@ describe("Test createErrorMessage function", () => {
       inputParams.errorExist,
       inputParams.loadingFalse
     );
-    const wrapper = shallow(expectedOutput);
+    const wrapperErrorMessage = shallow(expectedOutput);
 
     // act
-    const errorMessage = findByTestAttr(wrapper, "component-ErrorMessage");
+    const errorMessage = findByTestAttr(wrapperErrorMessage, "component-ErrorMessage");
 
     // assert
     expect(errorMessage.length).toBe(1);
